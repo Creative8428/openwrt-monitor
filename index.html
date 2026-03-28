@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Real-time monitoring dashboard for OpenWRT routers — CPU, memory, traffic, temperature, and connected devices." />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="OpenWRT Monitor" />
+
+  <title>OpenWRT Monitor</title>
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Gridstack for drag-and-drop widgets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10/dist/gridstack.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@10/dist/gridstack-all.js"></script>
+
+  <!-- Chart.js for real-time charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="/src/styles/index.css" />
+  <link rel="stylesheet" href="/src/styles/dashboard.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header" id="app-header">
+      <div class="header-left">
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 16C8 16 11 10 16 10C21 10 24 16 24 16C24 16 21 22 16 22C11 22 8 16 8 16Z" stroke="currentColor" stroke-width="2"/>
+            <circle cx="16" cy="16" r="3" fill="currentColor"/>
+          </svg>
+          <h1 class="logo-text">OpenWRT<span class="logo-accent">Monitor</span></h1>
+        </div>
+        <div class="router-status" id="router-status">
+          <span class="status-dot" id="status-dot"></span>
+          <span class="status-text" id="status-text">Connecting...</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost" id="btn-add-widget" title="Add Widget">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="btn-label">Add Widget</span>
+        </button>
+        <button class="btn btn-icon" id="btn-theme" title="Toggle Theme">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="btn btn-icon" id="btn-settings" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Grid -->
+    <main class="dashboard" id="dashboard">
+      <div class="grid-stack" id="grid-stack"></div>
+    </main>
+
+    <!-- Add Widget Modal -->
+    <div class="modal-overlay" id="modal-add-widget">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Add Widget</h2>
+          <button class="btn btn-icon modal-close" id="modal-close-add">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="widget-picker" id="widget-picker"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-overlay" id="settings-overlay">
+      <aside class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+          <h2>Settings</h2>
+          <button class="btn btn-icon" id="settings-close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="settings-body">
+          <div class="setting-group">
+            <label class="setting-label">Router IP</label>
+            <input type="text" class="setting-input" id="setting-router-ip" placeholder="192.168.1.1" />
+          </div>
+          <div class="setting-group">
+            <label class="setting-label">Poll Interval (seconds)</label>
+            <input type="number" class="setting-input" id="setting-poll-interval" min="5" max="300" value="10" />
+          </div>
+          <div class="setting-group">
+            <label class="setting-label">Theme</label>
+            <div class="setting-toggle-group">
+              <button class="setting-toggle active" data-theme-value="dark">Dark</button>
+              <button class="setting-toggle" data-theme-value="light">Light</button>
+            </div>
+          </div>
+          <div class="setting-group">
+            <button class="btn btn-danger" id="btn-reset-layout">Reset Layout</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "openwrt-monitor",
+  "version": "1.0.0",
+  "description": "Real-time monitoring dashboard for OpenWRT routers",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"nodemon server/index.js\" \"vite\"",
+    "build": "vite build",
+    "start": "NODE_ENV=production node server/index.js",
+    "test": "node server/test-api.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "nodemon": "^3.1.7",
+    "vite": "^6.0.0"
+  }
+}
