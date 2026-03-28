@@ -132,6 +132,7 @@ export async function addWidget(type, opts = {}) {
   }
 
   saveLayout();
+  updateEmptyState();
   return id;
 }
 
@@ -156,6 +157,7 @@ function removeWidget(id) {
     grid.removeWidget(item);
   }
   saveLayout();
+  updateEmptyState();
 }
 
 /**
@@ -177,11 +179,16 @@ async function updateAllWidgets() {
   // Update health status
   updateHealthStatus(status);
 
-  // Hide global loader once actual data has populated the widgets
-  if (status && status.cpu) {
+  // Hide global loader
+  if (status && (status.cpu || activeWidgets.size === 0 || status.status === 'error')) {
     const loader = document.getElementById('global-loader');
     if (loader && !loader.classList.contains('hidden')) {
-      loader.classList.add('hidden');
+      if (!window.__owrtLoaderDismissed) {
+        window.__owrtLoaderDismissed = true;
+        setTimeout(() => loader.classList.add('hidden'), 600); // minimum 600ms display
+      } else {
+        loader.classList.add('hidden');
+      }
     }
   }
 }
@@ -253,6 +260,7 @@ async function loadLayout() {
       for (const item of layout) {
         await addWidget(item.type, { x: item.x, y: item.y, w: item.w, h: item.h });
       }
+      updateEmptyState();
       return;
     } catch (err) {
       console.warn('[WidgetManager] Failed to load saved layout:', err);
@@ -269,6 +277,8 @@ async function loadLayout() {
   await addWidget('devices', { x: 0, y: 6, w: 6, h: 4 });
   await addWidget('connections', { x: 6, y: 6, w: 3, h: 3 });
   await addWidget('storage', { x: 9, y: 6, w: 3, h: 3 });
+  
+  updateEmptyState();
 }
 
 /**
@@ -285,6 +295,21 @@ export async function resetLayout() {
 
   // Reload defaults
   await loadLayout();
+  updateEmptyState();
+}
+
+/**
+ * Show/hide the empty state based on active widgets.
+ */
+function updateEmptyState() {
+  const emptyState = document.getElementById('empty-state');
+  if (!emptyState) return;
+  
+  if (activeWidgets.size === 0) {
+    emptyState.classList.remove('hidden');
+  } else {
+    emptyState.classList.add('hidden');
+  }
 }
 
 /**

@@ -69,6 +69,21 @@
 
     <!-- Dashboard Grid -->
     <main class="dashboard" id="dashboard">
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-state hidden">
+        <div class="empty-state-arrow-wrapper">
+          <svg class="empty-arrow" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,80 Q100,20 180,10" stroke="var(--accent-primary)" stroke-width="3" stroke-dasharray="6 6" fill="none" stroke-linecap="round"/>
+            <polygon points="170,0 185,8 175,22" fill="var(--accent-primary)"/>
+          </svg>
+        </div>
+        <div class="empty-state-content">
+          <div class="empty-state-icon">📝</div>
+          <h2>No widgets added</h2>
+          <p>Click the <strong>Add Widget</strong> button above to customize your dashboard.</p>
+        </div>
+      </div>
+
       <div class="grid-stack" id="grid-stack"></div>
     </main>
 
