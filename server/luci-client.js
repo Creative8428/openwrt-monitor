@@ -6,7 +6,11 @@ import fetch from 'node-fetch';
  */
 export class LuciClient {
   constructor(host, username, password) {
-    this.baseUrl = `http://${host}`;
+    if (host.startsWith('http://') || host.startsWith('https://')) {
+      this.baseUrl = host;
+    } else {
+      this.baseUrl = `http://${host}`;
+    }
     this.username = username;
     this.password = password;
     this.token = null;

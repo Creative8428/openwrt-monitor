@@ -1,4 +1,10 @@
 import 'dotenv/config';
+
+// Bypass strict SSL validation for router connections (allows self-signed certs)
+if (process.env.ROUTER_ALLOW_INSECURE_TLS !== 'false') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
+
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';

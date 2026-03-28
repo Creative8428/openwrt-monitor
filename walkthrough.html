@@ -746,6 +746,13 @@
         <div class="step">
           <div class="step-num" style="background: var(--red-dim); color: var(--red);">!</div>
           <div class="step-content">
+            <h3>"Unexpected token &lt;" error</h3>
+            <p>If you run into an "Unexpected token &lt;" error when starting the server, it simply means your router's LuCI RPC packages aren't fully initialized — just make sure you've run <code>apk add luci-mod-rpc luci-compat</code> and restarted your router's web interface.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background: var(--red-dim); color: var(--red);">!</div>
+          <div class="step-content">
             <h3>"Authentication failed" on startup</h3>
             <p>The <code>ROUTER_PASSWORD</code> in your <code>.env</code> is incorrect, or the LuCI RPC packages are not installed. SSH into the router and verify with the <code>curl</code> test from the <a href="#router-setup" style="color:var(--accent);">Router Setup</a> section.</p>
           </div>
