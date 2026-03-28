@@ -624,9 +624,14 @@
         </table>
       </div>
 
-      <div class="callout danger">
+      <div class="callout danger" style="margin-bottom: 12px;">
         <span class="callout-icon">🔒</span>
         <p><strong>Never commit your <code>.env</code> file.</strong> It's already in <code>.gitignore</code>. Keep your router password safe.</p>
+      </div>
+      
+      <div class="callout info">
+        <span class="callout-icon">🛡️</span>
+        <p><strong>Secure Local Storage:</strong> This dashboard automatically saves your layout and theme to your browser's <code>localStorage</code>. To protect against tampering and XSS attacks, the layout configuration is strictly validated against a hardcoded widget schema every time you load the page.</p>
       </div>
     </div>
   </section>

@@ -78,6 +78,14 @@ async function loadWidgetModule(type) {
  * Add a widget to the grid.
  */
 export async function addWidget(type, opts = {}) {
+  // Prevent duplicate widgets
+  for (const [id, widget] of activeWidgets) {
+    if (widget.type === type) {
+      alert(`The "${WIDGET_REGISTRY.find(w => w.type === type)?.name || type}" widget is already on your dashboard!`);
+      return null;
+    }
+  }
+
   const reg = WIDGET_REGISTRY.find((w) => w.type === type);
   if (!reg) return;
 
@@ -256,14 +264,38 @@ async function loadLayout() {
 
   if (saved) {
     try {
-      const layout = JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) throw new Error('Layout is not an array');
+
+      const layout = parsed.map(item => {
+        // Strict Schema Validation
+        if (!item || typeof item !== 'object') return null;
+        
+        // Ensure the layout type literally corresponds to one of our registered classes
+        const isValidType = WIDGET_REGISTRY.some(w => w.type === item.type);
+        if (!isValidType) {
+           console.warn(`[Security] Dropped invalid layout type: ${item.type}`);
+           return null;
+        }
+
+        // Sanitize coordinates and dimensions as integers
+        return {
+          type: String(item.type),
+          x: parseInt(item.x, 10) || 0,
+          y: parseInt(item.y, 10) || 0,
+          w: parseInt(item.w, 10) || undefined,
+          h: parseInt(item.h, 10) || undefined,
+        };
+      }).filter(Boolean);
+
       for (const item of layout) {
         await addWidget(item.type, { x: item.x, y: item.y, w: item.w, h: item.h });
       }
+      
       updateEmptyState();
       return;
     } catch (err) {
-      console.warn('[WidgetManager] Failed to load saved layout:', err);
+      console.warn('[WidgetManager] Failed to securely load saved layout:', err);
     }
   }
 
@@ -332,8 +364,10 @@ function setupAddWidgetModal() {
       <span class="widget-picker-desc">${reg.desc}</span>
     `;
     item.addEventListener('click', async () => {
-      await addWidget(reg.type);
-      modal.classList.remove('active');
+      const result = await addWidget(reg.type);
+      if (result) {
+        modal.classList.remove('active');
+      }
     });
     picker.appendChild(item);
   }

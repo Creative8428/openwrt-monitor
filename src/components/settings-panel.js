@@ -39,11 +39,21 @@ export function initSettingsPanel() {
 
   // Poll interval change
   const pollInput = document.getElementById('setting-poll-interval');
-  pollInput.addEventListener('change', () => {
+  const btnSavePoll = document.getElementById('btn-save-poll');
+  btnSavePoll.addEventListener('click', async () => {
     const val = parseInt(pollInput.value, 10);
     if (val >= 5 && val <= 300) {
       setUpdateInterval(val);
-      saveSettingsToServer();
+      await saveSettingsToServer();
+      
+      // Visual feedback
+      const originalText = btnSavePoll.textContent;
+      btnSavePoll.textContent = 'Saved!';
+      btnSavePoll.style.borderColor = 'var(--text-primary)';
+      setTimeout(() => {
+        btnSavePoll.textContent = originalText;
+        btnSavePoll.style.borderColor = 'var(--border-color)';
+      }, 1500);
     }
   });
 }
@@ -62,7 +72,8 @@ export function initThemeToggle() {
   });
 
   // Load saved theme
-  const saved = localStorage.getItem('owrt-monitor-theme') || 'dark';
+  let saved = localStorage.getItem('owrt-monitor-theme');
+  if (saved !== 'light' && saved !== 'dark') saved = 'dark';
   setTheme(saved);
 }
 
@@ -82,6 +93,11 @@ async function loadSettings() {
   if (settings) {
     const pollInput = document.getElementById('setting-poll-interval');
     if (pollInput && settings.poll_interval) pollInput.value = settings.poll_interval;
+    
+    const ipDiv = document.getElementById('setting-router-ip');
+    if (ipDiv && settings.router_ip) {
+      ipDiv.textContent = settings.router_ip;
+    }
   }
 }
 

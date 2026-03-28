@@ -114,11 +114,14 @@
         <div class="settings-body">
           <div class="setting-group">
             <label class="setting-label">Router IP</label>
-            <input type="text" class="setting-input" id="setting-router-ip" placeholder="192.168.1.1" />
+            <div class="setting-value" id="setting-router-ip" style="padding: 0.5rem; background: var(--bg-modifier-hover); border-radius: 6px; font-variant-numeric: tabular-nums; color: var(--text-secondary);">—</div>
           </div>
           <div class="setting-group">
             <label class="setting-label">Poll Interval (seconds)</label>
-            <input type="number" class="setting-input" id="setting-poll-interval" min="5" max="300" value="10" />
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="number" class="setting-input" id="setting-poll-interval" min="5" max="300" value="10" />
+              <button class="btn" id="btn-save-poll" style="padding: 0 1rem; border: 1px solid var(--border-color); background: var(--bg-elevated); color: var(--text-primary); cursor: pointer; border-radius: 6px;">Apply</button>
+            </div>
           </div>
           <div class="setting-group">
             <label class="setting-label">Theme</label>

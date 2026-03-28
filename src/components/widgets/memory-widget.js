@@ -24,7 +24,10 @@ export function init(container, id) {
 
 export async function update(container, id, status) {
   const mem = status?.memory;
-  if (!mem) return;
+  if (!mem || !mem.total) {
+    container.innerHTML = '<div style="padding:1rem;color:var(--color-danger)">Memory data unavailable</div>';
+    return;
+  }
 
   // Update percentage
   const percentEl = document.getElementById(`${id}-percent`);
@@ -89,14 +92,18 @@ export async function update(container, id, status) {
     });
   }
 
-  const usedReal = mem.used - (mem.buffers + mem.cached);
-  charts[id].data.datasets[0].data = [
-    Math.max(0, usedReal),
-    mem.buffers,
-    mem.cached,
-    mem.free,
-  ];
-  charts[id].update('none');
+  try {
+    const usedReal = mem.used - (mem.buffers + mem.cached);
+    charts[id].data.datasets[0].data = [
+      Math.max(0, usedReal),
+      mem.buffers,
+      mem.cached,
+      mem.free,
+    ];
+    charts[id].update('none');
+  } catch (err) {
+    console.error('[MemoryWidget] Chart update failed:', err);
+  }
 }
 
 export function destroy(id) {

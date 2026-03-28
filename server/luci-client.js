@@ -248,19 +248,22 @@ export class LuciClient {
       const lines = netdev.trim().split('\n').slice(2); // Skip headers
 
       for (const line of lines) {
-        const parts = line.trim().split(/\s+/);
-        const name = parts[0].replace(':', '');
+        const colonIdx = line.indexOf(':');
+        if (colonIdx === -1) continue;
+        const name = line.substring(0, colonIdx).trim();
         if (name === 'lo') continue; // Skip loopback
 
+        const parts = line.substring(colonIdx + 1).trim().split(/\s+/);
+
         interfaces[name] = {
-          rxBytes: parseInt(parts[1], 10),
-          rxPackets: parseInt(parts[2], 10),
-          rxErrors: parseInt(parts[3], 10),
-          rxDropped: parseInt(parts[4], 10),
-          txBytes: parseInt(parts[9], 10),
-          txPackets: parseInt(parts[10], 10),
-          txErrors: parseInt(parts[11], 10),
-          txDropped: parseInt(parts[12], 10),
+          rxBytes: parseInt(parts[0], 10) || 0,
+          rxPackets: parseInt(parts[1], 10) || 0,
+          rxErrors: parseInt(parts[2], 10) || 0,
+          rxDropped: parseInt(parts[3], 10) || 0,
+          txBytes: parseInt(parts[8], 10) || 0,
+          txPackets: parseInt(parts[9], 10) || 0,
+          txErrors: parseInt(parts[10], 10) || 0,
+          txDropped: parseInt(parts[11], 10) || 0,
         };
       }
 

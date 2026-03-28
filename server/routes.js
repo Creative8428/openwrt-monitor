@@ -138,7 +138,10 @@ router.get('/connections', (req, res) => {
 // ─── Settings ────────────────────────────────────────────────────────
 router.get('/settings', (req, res) => {
   const settings = getSettings();
-  res.json(settings);
+  res.json({
+    ...settings,
+    router_ip: process.env.ROUTER_IP || 'Unknown',
+  });
 });
 
 router.post('/settings', (req, res) => {
