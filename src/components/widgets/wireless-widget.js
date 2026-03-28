@@ -1,7 +1,7 @@
 /**
  * Wireless Widget — WiFi clients list with signal strength.
  */
-import { signalQuality } from '../../utils.js';
+import { signalQuality, escapeHTML } from '../../utils.js';
 import { api } from '../../api.js';
 
 export function init(container, id) {
@@ -43,8 +43,8 @@ export async function update(container, id, status) {
       <div style="display:flex;align-items:center;gap:0.75rem;padding:0.625rem 0.75rem;background:var(--bg-elevated);border-radius:var(--radius-md)">
         <div style="flex-shrink:0">${signalBars}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.85rem;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
-          <div style="font-size:0.7rem;color:var(--text-muted)" class="mono">${client.interface || '—'}</div>
+          <div style="font-size:0.85rem;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(name)}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted)" class="mono">${escapeHTML(client.interface || '—')}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:0.8rem;font-weight:600;color:${signalColor}">${client.signal ?? '—'} dBm</div>

@@ -1,7 +1,7 @@
 /**
  * Devices Widget — table of connected devices with top consumer highlight.
  */
-import { signalQuality } from '../../utils.js';
+import { signalQuality, escapeHTML } from '../../utils.js';
 import { api } from '../../api.js';
 
 export function init(container, id) {
@@ -51,9 +51,9 @@ export async function update(container, id, status) {
 
     return `
       <tr${i === 0 ? ' class="top-consumer"' : ''}>
-        <td style="font-weight:500;color:var(--text-primary)">${device.hostname || 'Unknown'}</td>
-        <td class="mono" style="font-size:0.75rem">${device.ip}</td>
-        <td class="mono" style="font-size:0.7rem;color:var(--text-muted)">${device.mac}</td>
+        <td style="font-weight:500;color:var(--text-primary)">${escapeHTML(device.hostname || 'Unknown')}</td>
+        <td class="mono" style="font-size:0.75rem">${escapeHTML(device.ip)}</td>
+        <td class="mono" style="font-size:0.7rem;color:var(--text-muted)">${escapeHTML(device.mac)}</td>
         <td>${device.signal != null ? `${signalBars} <span style="font-size:0.7rem;color:var(--text-muted)">${device.signal}dBm</span>` : '—'}</td>
         <td>${typeIcon}</td>
       </tr>

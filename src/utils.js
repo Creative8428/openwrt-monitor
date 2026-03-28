@@ -136,3 +136,16 @@ export function debounce(fn, ms) {
     timer = setTimeout(() => fn(...args), ms);
   };
 }
+
+/**
+ * Escape HTML characters to prevent XSS.
+ */
+export function escapeHTML(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}

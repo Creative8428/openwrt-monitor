@@ -1,7 +1,7 @@
 /**
  * Storage Widget — disk usage bars.
  */
-import { formatBytes, gaugeClass } from '../../utils.js';
+import { formatBytes, gaugeClass, escapeHTML } from '../../utils.js';
 
 export function init(container, id) {
   container.innerHTML = `<div id="${id}-mounts" style="display:flex;flex-direction:column;gap:1rem">
@@ -24,7 +24,7 @@ export async function update(container, id, status) {
     return `
       <div>
         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.25rem">
-          <span style="color:var(--text-primary);font-weight:500" class="mono">${mount.mount}</span>
+          <span style="color:var(--text-primary);font-weight:500" class="mono">${escapeHTML(mount.mount)}</span>
           <span style="color:var(--text-muted)">${formatBytes(mount.used)} / ${formatBytes(mount.total)}</span>
         </div>
         <div class="gauge-bar" style="height:6px">

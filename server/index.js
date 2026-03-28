@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initDatabase, closeDatabase } from './database.js';
@@ -15,7 +14,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 
 // API routes
