@@ -176,6 +176,14 @@ async function updateAllWidgets() {
 
   // Update health status
   updateHealthStatus(status);
+
+  // Hide global loader once actual data has populated the widgets
+  if (status && status.cpu) {
+    const loader = document.getElementById('global-loader');
+    if (loader && !loader.classList.contains('hidden')) {
+      loader.classList.add('hidden');
+    }
+  }
 }
 
 /**
