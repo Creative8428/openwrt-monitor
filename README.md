@@ -34,5 +34,9 @@ The **Setup Guide** contains:
 - **Tooling**: Vite (Multi-Page App compilation)
 - **Libraries**: Gridstack.js (drag-and-drop), Chart.js (graphs)
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ---
 *Built to make monitoring OpenWRT routers visually stunning and effortless.*
