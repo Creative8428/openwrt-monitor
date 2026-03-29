@@ -9,7 +9,7 @@ import {
   getSettings,
   saveSettings,
 } from './database.js';
-import { getLatestSnapshot } from './poller.js';
+import { getLatestSnapshot, setPollingInterval } from './poller.js';
 
 const router = Router();
 
@@ -146,6 +146,12 @@ router.get('/settings', (req, res) => {
 
 router.post('/settings', (req, res) => {
   saveSettings(req.body);
+
+  const interval = parseInt(req.body.poll_interval, 10);
+  if (interval >= 5 && interval <= 300) {
+    setPollingInterval(interval);
+  }
+
   res.json({ success: true });
 });
 

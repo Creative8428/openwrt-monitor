@@ -56,6 +56,17 @@ export function getLatestSnapshot() {
 }
 
 /**
+ * Update the polling interval at runtime.
+ */
+export function setPollingInterval(seconds) {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+  }
+  pollingInterval = setInterval(poll, seconds * 1000);
+  console.log(`[Poller] Interval updated to ${seconds}s`);
+}
+
+/**
  * Stop polling.
  */
 export function stopPolling() {
