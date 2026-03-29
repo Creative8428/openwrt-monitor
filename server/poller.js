@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { insertSnapshot } from './database.js';
+import { insertSnapshot, purgeOldData } from './database.js';
 
 let pollingInterval = null;
 let luciClient = null;
@@ -26,7 +26,6 @@ export function startPolling(client, intervalSeconds = 10) {
 
   // Schedule daily data purge at 3 AM
   cron.schedule('0 3 * * *', () => {
-    const { purgeOldData } = require('./database.js');
     purgeOldData(30);
     console.log('[Poller] Daily data purge completed');
   });
