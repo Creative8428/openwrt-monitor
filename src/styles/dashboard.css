@@ -526,6 +526,18 @@
   font-size: 0.95rem;
   line-height: 1.5;
 }
+.empty-state-help {
+  margin-top: var(--space-sm);
+  font-size: 0.85rem;
+}
+.empty-state-help a {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.empty-state-help a:hover {
+  opacity: 0.8;
+}
 .empty-state-arrow-wrapper {
   position: absolute;
   top: 60px;
